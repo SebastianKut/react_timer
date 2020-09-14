@@ -1,0 +1,86 @@
+@font-face {
+  font-family: "Digital";
+  src: url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.eot");
+  src: url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.woff") format("woff"), url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/8e22783d707ad140bffe18b2a3812529.svg#Digital-7") format("svg");
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+  font-family: digital;
+  color: aquamarine;
+}
+
+#app {
+border: 4px solid aquamarine;
+border-radius: 10px;
+background-color: rgba(0, 0, 0, 0.705);
+}
+
+#break-label,
+#session-label,
+#timer-label {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.nav-container {
+  display: flex;
+  margin: 2rem;
+}
+
+.module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  font-size: 2rem;
+}
+
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem;
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 2rem 0 2rem;
+  padding: 0.5rem;
+  width: 300px;
+  border: 4px solid aquamarine;
+  border-radius: 10px;
+}
+
+.timer p, div {
+  margin: 0.5rem;
+}
+
+#time-left {
+  font-size: 4rem;
+}
+
+.controls {
+  display: flex;
+}
+
+.btn {
+  cursor: pointer;
+}
