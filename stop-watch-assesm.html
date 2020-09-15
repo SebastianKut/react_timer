@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Simple stopwatch clock</title>
+    <style>
+      #display {
+        font-family: sans-serif;
+      };
+    </style>
+  </head>
+  <body>
+
+    <div id="stop-watch">
+
+        <p id="display"></p>
+        <button type="button" id="start">Start</button>
+        <button type="button" id="stop">Stop</button>
+        <button type="button" id="reset">Reset</button>
+        
+    </div>
+
+    <script>
+      
+      // set up selectors
+      let display = document.getElementById('display');
+      let startBtn = document.getElementById('start');
+      let stopBtn = document.getElementById('stop');
+      let resetBtn = document.getElementById('reset');
+      
+      // set up variables
+      let controlStopWatch;   // global variable to control set and clear interval
+      let counter = 0;      // increments everytime calcTime function refreshes - every 1000ms
+      let timeElapsed = 0;  // time elapsed since last stop button click 
+
+      display.textContent = '00:00:00';  // reset display on page load
+
+
+
+function calcTime() {
+
+let timeStampMili = Date.now() - start;      // after function is run we get time stamp (delay between clickin the button and function triggering)
+let timeStampSec = Math.floor(timeStampMili/1000) + timeElapsed;  // adding timeElapsed so display continues after start click from where it was on stop click 
+
+// calculating hours, minutes and seconds
+let hours = Math.floor(timeStampSec/3600);
+let minutes = Math.floor((timeStampSec - (hours * 3600)) / 60);
+let seconds = ((timeStampSec - (hours * 3600)) - (minutes * 60));
+
+// setting up leading zero on a display
+let hoursStr = '';
+let minutesStr = '';
+let secondsStr = '';
+
+hours<10 ? hoursStr = `0${hours}` : hoursStr = `${hours}`;
+minutes<10 ? minutesStr = `0${minutes}` : minutesStr = `${minutes}`;
+seconds<10 ? secondsStr = `0${seconds}` : secondsStr = `${seconds}`;
+
+display.textContent = `${hoursStr}:${minutesStr}:${secondsStr}`;
+
+counter++;
+};
+
+
+startBtn.onclick = function (){
+start = Date.now();  //getting time at button click so then when calcTime function fires it calculates seconds elapsed based on this
+controlStopWatch = setInterval(calcTime,1000);
+startBtn.disabled = true;
+}
+
+stopBtn.onclick = function (){
+  clearInterval(controlStopWatch);
+  timeElapsed = counter;  // getting counter value after pressing stop button to restart from elapsed time and not from 0
+  startBtn.disabled = false;
+};
+
+resetBtn.onclick = function(){
+  clearInterval(controlStopWatch);
+  counter = 0;
+  timeElapsed = counter;
+  display.textContent = '00:00:00';
+}
+    </script>
+  </body>
+</html>
