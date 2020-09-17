@@ -41,7 +41,7 @@ class App extends Component {
   }
 
   handleChange = (e) => {
-    const clickedElement = e.target.parentElement.id;
+    const clickedElement = e.target.id;
     let breakValue = this.state.break;
     let sessionValue = this.state.session;
     
@@ -51,17 +51,17 @@ class App extends Component {
     if (sessionValue>=60 && clickedElement === 'session-increment') return;
 
     if (clickedElement === 'break-decrement' && !this.state.timerActive) {
-      this.setState({break: breakValue - 1})
+      this.setState({break: breakValue - 1});
     };
     if (clickedElement === 'break-increment' && !this.state.timerActive) {
-      this.setState({break: breakValue + 1})
+      this.setState({break: breakValue +1});
     };
     if (clickedElement === 'session-decrement' && !this.state.timerActive) {
       sessionValue = sessionValue - 1;
       this.setState({session: sessionValue,
       timer: sessionValue * 60
     })
-    };
+  }
     if (clickedElement === 'session-increment' && !this.state.timerActive) {
       sessionValue = sessionValue + 1;
       this.setState({session: sessionValue,
@@ -88,6 +88,7 @@ class App extends Component {
       label: 'Session'
     });
     this.pauseSound();
+   //stop reset from throwing an error if pressed before start and stop when controlStopwatch value is still undefined 
    if (controlStopwatch === undefined) {return} else {this.pauseCountdown()};
   }
 
@@ -95,6 +96,7 @@ class App extends Component {
     this.state.timerActive ? this.pauseCountdown() : controlStopwatch = accurateInterval(this.beginCountdown, 1000)    
   }
 
+  //update state and check check time every 1000ms
   beginCountdown = () => {
     this.setState({
       timer: this.state.timer - 1,
@@ -110,6 +112,7 @@ class App extends Component {
   })
   }
 
+  //switch modes from break to session when countdown reaches 0
   checkTime = () => {
     if (this.state.timer === -1 && this.state.sessionCountdown === true) {
       this.setState({
@@ -155,3 +158,4 @@ class App extends Component {
 }
 
 export default App
+

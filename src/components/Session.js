@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Session extends Component {
     render() {
@@ -6,13 +7,19 @@ class Session extends Component {
             <div className="module">
                 <div id="session-label">Session Length</div>
                 <div className="buttons-container">
-                    <div className="btn" id="session-decrement" onClick={this.props.handleChange}><i className="fas fa-caret-down"></i></div>
+                    <button className="btn" id="session-decrement" onClick={this.props.handleChange}><i className="fas fa-caret-down"/></button>
                     <div id="session-length">{this.props.session}</div>
-                    <div className="btn" id="session-increment" onClick={this.props.handleChange}><i className="fas fa-caret-up"></i></div>
+                    <button className="btn" id="session-increment" onClick={this.props.handleChange}><i className="fas fa-caret-up"/></button>
                 </div>
           </div>
         )
     }
 }
+
+Session.propTypes = {
+    handleChange: PropTypes.func.isRequired,
+    session: PropTypes.number.isRequired
+  }
+
 
 export default Session

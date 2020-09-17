@@ -83,4 +83,19 @@ background-color: rgba(0, 0, 0, 0.705);
 
 .btn {
   cursor: pointer;
+  background-color: transparent;
+  color: aquamarine;
+  border: 1px solid aquamarine;
+  width: 40px;
+  
+}
+
+.btn > * {
+  pointer-events: none;
+} /*this is a trick to make sure that when we click on icon thats on the top of button
+the onClick will still fire)*/
+
+.control-btn {
+  border: none;
+  width: auto;
 }
