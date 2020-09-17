@@ -7,6 +7,26 @@ import './App.css';
 
 let controlStopwatch;
 
+//script to make sure that interval stays synced from https://gist.github.com/AlexJWayne/1431195
+const accurateInterval = function(fn, time) {
+    var cancel, nextAt, timeout, wrapper;
+    nextAt = new Date().getTime() + time;
+    timeout = null;
+    wrapper = function() {
+      nextAt += time;
+      timeout = setTimeout(wrapper, nextAt - new Date().getTime());
+      return fn();
+    };
+    cancel = function() {
+      return clearTimeout(timeout);
+    };
+    timeout = setTimeout(wrapper, nextAt - new Date().getTime());
+    return {
+      cancel: cancel
+    };
+  };
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,15 +42,32 @@ class App extends Component {
 
   handleChange = (e) => {
     const clickedElement = e.target.parentElement.id;
-    console.log(clickedElement);
-    if (clickedElement === 'break-decrement') this.setState({break: (this.state.break <= 1 ? this.state.break - 0 : this.state.break - 1)});
-    if (clickedElement === 'break-increment') this.setState({break: (this.state.break >= 60 ? this.state.break + 0 : this.state.break + 1)});
-    if (clickedElement === 'session-decrement') this.setState({session: (this.state.session <= 1 ? this.state.session - 0 : this.state.session - 1),
-      timer: (this.state.timer <= 60 ? this.state.timer - 0 : this.state.timer - 60)
-    });
-    if (clickedElement === 'session-increment') this.setState({session: (this.state.session >= 60 ? this.state.session + 0 : this.state.session + 1),
-      timer: (this.state.timer >= 3600 ? this.state.timer + 0 : this.state.timer + 60)
-    }); 
+    let breakValue = this.state.break;
+    let sessionValue = this.state.session;
+    
+    if (breakValue <=1 && clickedElement === 'break-decrement') return;
+    if (breakValue>=60 && clickedElement === 'break-increment') return;
+    if (sessionValue <=1 && clickedElement === 'session-decrement') return;
+    if (sessionValue>=60 && clickedElement === 'session-increment') return;
+
+    if (clickedElement === 'break-decrement' && !this.state.timerActive) {
+      this.setState({break: breakValue - 1})
+    };
+    if (clickedElement === 'break-increment' && !this.state.timerActive) {
+      this.setState({break: breakValue + 1})
+    };
+    if (clickedElement === 'session-decrement' && !this.state.timerActive) {
+      sessionValue = sessionValue - 1;
+      this.setState({session: sessionValue,
+      timer: sessionValue * 60
+    })
+    };
+    if (clickedElement === 'session-increment' && !this.state.timerActive) {
+      sessionValue = sessionValue + 1;
+      this.setState({session: sessionValue,
+      timer: sessionValue * 60
+    })
+    }; 
   }
 
   formatTimer = () =>{
@@ -45,12 +82,17 @@ class App extends Component {
     this.setState({
       break: 5,
       session: 25,
-      timer: 1500
-    })
+      timer: 1500,
+      timerActive: false,
+      sessionCountdown: true,
+      label: 'Session'
+    });
+    this.pauseSound();
+   if (controlStopwatch === undefined) {return} else {this.pauseCountdown()};
   }
 
   startStop = () => {
-    this.state.timerActive ? this.pauseCountdown() : controlStopwatch = setInterval(this.beginCountdown, 1000)    
+    this.state.timerActive ? this.pauseCountdown() : controlStopwatch = accurateInterval(this.beginCountdown, 1000)    
   }
 
   beginCountdown = () => {
@@ -62,22 +104,21 @@ class App extends Component {
   }
 
   pauseCountdown = () => {
-   console.log ('what now');
-   clearInterval(controlStopwatch);
+    controlStopwatch.cancel();
    this.setState({
     timerActive: false
   })
   }
 
   checkTime = () => {
-    if (this.state.timer === 0 && this.state.sessionCountdown === true) {
+    if (this.state.timer === -1 && this.state.sessionCountdown === true) {
       this.setState({
         timer: this.state.break * 60,
         sessionCountdown: false,
         label: 'Break'
       });
       this.playSound();
-    } else if (this.state.timer === 0 && this.state.sessionCountdown === false) {
+    } else if (this.state.timer === -1 && this.state.sessionCountdown === false) {
         this.setState({
           timer: this.state.session * 60,
           sessionCountdown: true,
@@ -92,6 +133,12 @@ class App extends Component {
       beep.pause();
       beep.currentTime = 0;
       beep.play();
+    }
+
+    pauseSound = () => {
+      const beep = document.getElementById('beep');
+      beep.pause();
+      beep.currentTime = 0;
     }
 
   render() {
